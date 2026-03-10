@@ -10,7 +10,12 @@
 
 - LXC Ubuntu 24.04 with two network interfaces
 - Root access to the container
-- `garage` binary already downloaded
+
+Download the `garage` binary:
+
+```bash
+wget https://garagehq.deuxfleurs.fr/_releases/v2.2.0/x86_64-unknown-linux-musl/garage
+```
 
 ---
 
