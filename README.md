@@ -218,6 +218,71 @@ The output should show the associated key with `R/W/Owner` permissions.
 
 ---
 
+## 7. Connecting S3 clients
+
+The S3 API endpoint is:
+
+```
+http://10.1.0.210:3900
+```
+
+| Parameter | Value |
+|-----------|-------|
+| Endpoint | `http://10.1.0.210:3900` |
+| Region | `garage` |
+| Access Key ID | from `garage key info <KEY_NAME>` |
+| Secret Key | saved at key creation time |
+| Path-style | `true` (mandatory) |
+
+> **Note on path-style**: Garage does not support virtual-host style bucket addressing (`bucket.endpoint`) without wildcard DNS. Always configure clients with path-style / force-path-style enabled.
+
+### awscli
+
+```bash
+export AWS_ACCESS_KEY_ID=<KEY_ID>
+export AWS_SECRET_ACCESS_KEY=<SECRET_KEY>
+export AWS_DEFAULT_REGION=garage
+
+# List buckets
+aws --endpoint-url http://10.1.0.210:3900 s3 ls
+
+# List objects in a bucket
+aws --endpoint-url http://10.1.0.210:3900 s3 ls s3://<BUCKET_NAME>/
+
+# Upload a file
+aws --endpoint-url http://10.1.0.210:3900 s3 cp myfile.txt s3://<BUCKET_NAME>/
+```
+
+### rclone
+
+Add to `~/.config/rclone/rclone.conf`:
+
+```ini
+[garage]
+type = s3
+provider = Other
+env_auth = false
+access_key_id = <KEY_ID>
+secret_access_key = <SECRET_KEY>
+region = garage
+endpoint = http://10.1.0.210:3900
+force_path_style = true
+acl = private
+```
+
+```bash
+# List buckets
+rclone lsd garage:
+
+# List objects
+rclone ls garage:<BUCKET_NAME>
+
+# Copy a file
+rclone copy myfile.txt garage:<BUCKET_NAME>/
+```
+
+---
+
 ## Port reference
 
 | Port | Interface | Service |
